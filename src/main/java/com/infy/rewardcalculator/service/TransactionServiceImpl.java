@@ -2,6 +2,7 @@ package com.infy.rewardcalculator.service;
 
 import com.infy.rewardcalculator.entity.Transaction;
 import com.infy.rewardcalculator.repository.TransactionRepository;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 public class TransactionServiceImpl implements TransactionService{
 
     @Autowired
+    @Setter
     private TransactionRepository transactionRepository;
 
     @Override
