@@ -20,8 +20,8 @@ public class RewardController {
     @Autowired
     private TransactionService transactionService;
 
-    @GetMapping("/getreward")
-    public ResponseEntity<Map<String, Map<String, Integer>>> getReward() {
+    @GetMapping("/rewards")
+    public ResponseEntity<Map<String, Map<String, Integer>>> rewards() {
         return new ResponseEntity<>(transactionService.getMonthlyRewards(), HttpStatus.OK);
     }
 
@@ -31,8 +31,8 @@ public class RewardController {
         return new ResponseEntity<>(transactionService.getAllTransactions(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get-all", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<Transaction>> getAll() {
+    @GetMapping(value = "/transactions", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Transaction>> transactions() {
         return new ResponseEntity<>(transactionService.getAllTransactions(), HttpStatus.OK);
     }
 }
