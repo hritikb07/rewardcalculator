@@ -26,9 +26,9 @@ public class RewardController {
     }
 
     @PostMapping(value = "/transaction", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<Transaction>> saveTransaction(@RequestBody Transaction transaction) {
+    public ResponseEntity<String> saveTransaction(@RequestBody Transaction transaction) {
         transactionService.saveTransaction(transaction);
-        return new ResponseEntity<>(transactionService.getAllTransactions(), HttpStatus.OK);
+        return new ResponseEntity<>("Transaction saved successfully.", HttpStatus.OK);
     }
 
     @GetMapping(value = "/transactions", produces = {MediaType.APPLICATION_JSON_VALUE})
