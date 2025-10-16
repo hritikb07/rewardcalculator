@@ -21,9 +21,7 @@ class TransactionServiceImplTest {
 
         TransactionRepository transctionRepository = mock(TransactionRepository.class);
 
-        TransactionServiceImpl transcationServiceImpl = new TransactionServiceImpl();
-
-        transcationServiceImpl.setTransactionRepository(transctionRepository);
+        TransactionServiceImpl transcationServiceImpl = new TransactionServiceImpl(transctionRepository);
 
         Transaction transcation = new Transaction();
 

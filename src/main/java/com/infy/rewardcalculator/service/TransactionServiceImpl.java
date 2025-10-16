@@ -16,10 +16,10 @@ import java.util.Map;
 
 @Service
 public class TransactionServiceImpl implements TransactionService{
-
-    @Autowired
-    @Setter
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
+    public TransactionServiceImpl(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
+    }
 
     @Override
     public List<Transaction> getAllTransactions() {
