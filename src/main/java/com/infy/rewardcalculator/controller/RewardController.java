@@ -1,5 +1,6 @@
 package com.infy.rewardcalculator.controller;
 
+import com.infy.rewardcalculator.dto.RewardDto;
 import com.infy.rewardcalculator.entity.Transaction;
 import com.infy.rewardcalculator.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class RewardController {
@@ -21,7 +21,7 @@ public class RewardController {
     private TransactionService transactionService;
 
     @GetMapping("/rewards")
-    public ResponseEntity<Map<String, Map<String, Integer>>> rewards() {
+    public ResponseEntity<List<RewardDto>> rewards() {
         return new ResponseEntity<>(transactionService.getMonthlyRewards(), HttpStatus.OK);
     }
 
