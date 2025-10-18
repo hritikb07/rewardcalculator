@@ -24,16 +24,35 @@ public class TransactionServiceImpl implements TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
+    /**
+     * This API returns all transaction from databases
+     *
+     * @return List<Transaction>
+     */
     @Override
     public List<Transaction> getAllTransactions() {
         return (List<Transaction>) transactionRepository.findAll();
     }
 
+    /**
+     * This API save transaction in database
+     *
+     * @param transaction
+     */
     @Override
     public void saveTransaction(Transaction transaction) {
         transactionRepository.save(transaction);
     }
 
+    /**
+     * This API fetches all transactions from database and filter it based on start and end date. If start and end date not specified
+     * then considers all transaction for further processing.
+     * Generate Customers monthly rewards
+     *
+     * @param startDateMillis
+     * @param endDateMillis
+     * @return list of reward dto
+     */
     @Override
     public List<RewardDto> getMonthlyRewards(Long startDateMillis, Long endDateMillis) {
         Iterable<Transaction> transactions = transactionRepository.findAll();
@@ -56,12 +75,24 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
+    /**
+     * Extract month from provided date
+     *
+     * @param millis
+     * @return month in word
+     */
     public String getMonthFromMillis(long millis) {
         LocalDateTime localDateTime = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDateTime();
         Month month = localDateTime.getMonth();
         return month.toString();
     }
 
+    /**
+     * Calculates reward points according to problem statement
+     *
+     * @param amount
+     * @return reward
+     */
     public int calculatePoints(double amount) {
         int points = 0;
         if (amount > 100) {
