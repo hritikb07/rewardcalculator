@@ -59,7 +59,7 @@ class TransactionServiceImplTest {
 
         when(transactionRepository.findAll()).thenReturn(transactions);
 
-        List<RewardDto> rewardData = transactionServiceImpl.getMonthlyRewards();
+        List<RewardDto> rewardData = transactionServiceImpl.getMonthlyRewards(null, null);
 
         // Assert only 1 customer
         Assertions.assertEquals(1, rewardData.size());
@@ -119,7 +119,7 @@ class TransactionServiceImplTest {
 
         when(transctionRepository.findAll()).thenReturn(transactions);
 
-        List<RewardDto> rewardData = transcationServiceImpl.getMonthlyRewards();
+        List<RewardDto> rewardData = transcationServiceImpl.getMonthlyRewards(null,null);
 
 
         // Assert only 1 customer

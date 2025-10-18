@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,8 +18,17 @@ public class RewardController {
     private TransactionService transactionService;
 
     @GetMapping("/rewards")
-    public ResponseEntity<List<RewardDto>> rewards() {
-        return new ResponseEntity<>(transactionService.getMonthlyRewards(), HttpStatus.OK);
+    public ResponseEntity<List<RewardDto>> rewardsWithEmptyDate() {
+        return getListResponseEntity(null, null);
+    }
+
+    private ResponseEntity<List<RewardDto>> getListResponseEntity(Long startDate,Long endDate) {
+        return new ResponseEntity<>(transactionService.getMonthlyRewards(startDate, endDate), HttpStatus.OK);
+    }
+
+    @GetMapping("/rewards/{startDate}/{endDate}")
+    public ResponseEntity<List<RewardDto>> rewards(@PathVariable(name = "startDate") long startDate, @PathVariable(name = "endDate") long endDate) {
+        return getListResponseEntity(startDate, endDate);
     }
 
     @PostMapping(value = "/transaction", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

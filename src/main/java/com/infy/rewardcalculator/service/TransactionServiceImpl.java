@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -34,29 +35,24 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<RewardDto> getMonthlyRewards() {
+    public List<RewardDto> getMonthlyRewards(Long startDateMillis, Long endDateMillis) {
         Iterable<Transaction> transactions = transactionRepository.findAll();
 
-        // Step 1: Collect rewards into Map<String, Map<String, Integer>> using streams
-        Map<String, Map<String, Integer>> rewardsMap = StreamSupport.stream(transactions.spliterator(), false).collect(Collectors.groupingBy(t -> t.getCustomer().getCustomerName(), Collectors.groupingBy(t -> getMonthFromMillis(t.getTransactionDate()), Collectors.summingInt(t -> calculatePoints(t.getTransactionAmount())))));
+        // Convert Iterable to Stream
+        Stream<Transaction> transactionStream = StreamSupport.stream(transactions.spliterator(), false).filter(t -> {
+            // If dates are provided, apply filter; otherwise, always include the transaction
+            if (startDateMillis != null && endDateMillis != null) {
+                long txnDate = t.getTransactionDate(); // Assuming transactionDate is in millis
+                return txnDate >= startDateMillis && txnDate <= endDateMillis;
+            }
+            return true;
+        });
 
-        // Step 2: Convert the nested Map into List<RewardDto>
-        return rewardsMap.entrySet().stream().map(entry -> {
-            String customerName = entry.getKey();
-            Map<String, Integer> monthlyMap = entry.getValue();
+        // Grouping transactions by customer name and month, summing points
+        Map<String, Map<String, Integer>> rewardsMap = transactionStream.collect(Collectors.groupingBy(t -> t.getCustomer().getCustomerName(), Collectors.groupingBy(t -> getMonthFromMillis(t.getTransactionDate()), Collectors.summingInt(t -> calculatePoints(t.getTransactionAmount())))));
 
-            List<MonthlyRewardDto> monthlyRewardDtos = monthlyMap.entrySet().stream().map(monthEntry -> {
-                MonthlyRewardDto dto = new MonthlyRewardDto();
-                dto.setMonth(monthEntry.getKey());
-                dto.setRewardAmount(monthEntry.getValue());
-                return dto;
-            }).collect(Collectors.toList());
-
-            RewardDto rewardDto = new RewardDto();
-            rewardDto.setCustomerName(customerName);
-            rewardDto.setMonthlyRewardDtos(monthlyRewardDtos);
-            return rewardDto;
-        }).collect(Collectors.toList());
+        // Mapping to List<RewardDto>
+        return rewardsMap.entrySet().stream().map(entry -> new RewardDto(entry.getKey(), entry.getValue().entrySet().stream().map(monthEntry -> new MonthlyRewardDto(monthEntry.getKey(), monthEntry.getValue())).collect(Collectors.toList()))).collect(Collectors.toList());
     }
 
 

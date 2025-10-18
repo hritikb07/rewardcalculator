@@ -11,5 +11,5 @@ public interface TransactionService {
 
     void saveTransaction(Transaction transaction);
 
-    List<RewardDto> getMonthlyRewards();
+    List<RewardDto> getMonthlyRewards(Long startDateMillis, Long endDateMillis);
 }
