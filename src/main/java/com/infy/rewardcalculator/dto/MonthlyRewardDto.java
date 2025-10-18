@@ -1,8 +1,10 @@
 package com.infy.rewardcalculator.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class MonthlyRewardDto {
 
     private String month;

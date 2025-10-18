@@ -1,10 +1,12 @@
 package com.infy.rewardcalculator.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class RewardDto {
     private String customerName;
     private List<MonthlyRewardDto> monthlyRewardDtos;

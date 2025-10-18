@@ -1,0 +1,139 @@
+package com.infy.rewardcalculator.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.infy.rewardcalculator.dto.MonthlyRewardDto;
+import com.infy.rewardcalculator.dto.RewardDto;
+import com.infy.rewardcalculator.entity.Customer;
+import com.infy.rewardcalculator.entity.Transaction;
+import com.infy.rewardcalculator.service.TransactionService;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(RewardController.class)
+class RewardControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private TransactionService transactionService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    // Sample DTOs
+    private RewardDto sampleRewardDto() {
+        MonthlyRewardDto monthly = new MonthlyRewardDto();
+        monthly.setMonth("SEPTEMBER");
+        monthly.setRewardAmount(150);
+
+        RewardDto rewardDto = new RewardDto();
+        rewardDto.setCustomerName("Hritik");
+        rewardDto.setMonthlyRewardDtos(Collections.singletonList(monthly));
+
+        return rewardDto;
+    }
+
+    private Transaction sampleTransaction() {
+        Transaction txn = new Transaction();
+        txn.setTransactionId(1);
+        txn.setTransactionAmount(200.0);
+        txn.setTransactionDate(1757894400000L); // 15 Sep 2025
+
+        Customer customer = new Customer();
+        customer.setCustomerId(1000);
+        customer.setCustomerName("Hritik");
+        txn.setCustomer(customer);
+
+        return txn;
+    }
+
+    @Test
+    void testRewardsWithEmptyDate() throws Exception {
+        List<RewardDto> mockResponse = Collections.singletonList(sampleRewardDto());
+        Mockito.when(transactionService.getMonthlyRewards(null, null)).thenReturn(mockResponse);
+
+        mockMvc.perform(get("/rewards")).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewardDtos[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewardDtos[0].rewardAmount").value(150));
+    }
+
+    @Test
+    void testRewardsWithDates() throws Exception {
+        List<RewardDto> mockResponse = Collections.singletonList(sampleRewardDto());
+
+        long startDate = 1739577600000L; // 15 Feb 2025
+        long endDate = 1757894400000L;   // 15 Sep 2025
+
+        Mockito.when(transactionService.getMonthlyRewards(startDate, endDate)).thenReturn(mockResponse);
+
+        mockMvc.perform(get("/rewards/{startDate}/{endDate}", startDate, endDate)).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewardDtos[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewardDtos[0].rewardAmount").value(150));
+    }
+
+    @Test
+    void testSaveTransaction() throws Exception {
+        Transaction transaction = sampleTransaction();
+
+        mockMvc.perform(post("/transaction").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(transaction))).andExpect(status().isOk()).andExpect(content().string("Transaction saved successfully."));
+
+        Mockito.verify(transactionService).saveTransaction(Mockito.any(Transaction.class));
+    }
+
+    @Test
+    void testGetAllTransactions() throws Exception {
+        List<Transaction> mockTransactions = List.of(sampleTransaction());
+
+        Mockito.when(transactionService.getAllTransactions()).thenReturn(mockTransactions);
+
+        mockMvc.perform(get("/transactions")).andExpect(status().isOk()).andExpect(jsonPath("$[0].transactionAmount").value(200.0)).andExpect(jsonPath("$[0].customer.customerName").value("Hritik"));
+    }
+
+    @Test
+    void testRewardsWithInvalidPathVariable() throws Exception {
+        // Passing non-numeric string instead of long
+        mockMvc.perform(get("/rewards/invalidStart/invalidEnd")).andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void testSaveTransactionWithMissingFields() throws Exception {
+        Transaction invalidTransaction = new Transaction(); // missing fields
+
+        mockMvc.perform(post("/transaction").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(invalidTransaction))).andExpect(status().isOk()); // Assuming validation is applied
+
+        verify(transactionService, atMostOnce()).saveTransaction(any());
+    }
+
+    @Test
+    void testGetMonthlyRewardsThrowsException() throws Exception {
+        when(transactionService.getMonthlyRewards(any(), any())).thenThrow(new RuntimeException("Something went wrong"));
+
+        mockMvc.perform(get("/rewards")).andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void testSaveTransactionThrowsException() throws Exception {
+        Transaction txn = sampleTransaction();
+        doThrow(new RuntimeException("DB error")).when(transactionService).saveTransaction(any());
+
+        mockMvc.perform(post("/transaction").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(txn))).andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void testEmptyTransactionList() throws Exception {
+        when(transactionService.getAllTransactions()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/transactions")).andExpect(status().isOk()).andExpect(content().string("[]"));
+    }
+}
