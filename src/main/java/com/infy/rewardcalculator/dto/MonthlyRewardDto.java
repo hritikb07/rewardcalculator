@@ -7,5 +7,5 @@ public class MonthlyRewardDto {
 
     private String month;
     private int rewardAmount;
-    
+
 }
