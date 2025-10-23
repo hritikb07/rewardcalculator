@@ -73,10 +73,10 @@ class RewardControllerTest {
     void testRewardsWithDates() throws Exception {
         List<Reward> mockResponse = Collections.singletonList(sampleRewardDto());
 
-        long startDate = 1739577600000L; // 15 Feb 2025
-        long endDate = 1757894400000L;   // 15 Sep 2025
+        String startDate = "2025-02-15"; // 15 Feb 2025
+        String endDate = "2025-09-15";   // 15 Sep 2025
 
-        Mockito.when(transactionService.getMonthlyRewards(startDate, endDate)).thenReturn(mockResponse);
+        Mockito.when(transactionService.getMonthlyRewards(any(), any())).thenReturn(mockResponse);
 
         mockMvc.perform(get("/rewards?startDate="+startDate+"&endDate="+ endDate)).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewards[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewards[0].rewardAmount").value(150));
     }

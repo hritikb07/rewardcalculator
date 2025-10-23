@@ -4,11 +4,14 @@ import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Transaction;
 import com.infy.rewardcalculator.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -34,17 +37,28 @@ public class RewardController {
      *
      * Example URLs:
      *   GET http://localhost:8080/rewards
-     *   GET http://localhost:8080/rewards?startDate=1729440000000
-     *   GET http://localhost:8080/rewards?startDate=1729440000000&endDate=1732032000000
+     *   Get http://localhost:8080/rewards?startDate=2025-02-15&endDate=2025-09-15
      */
     @RequestMapping(value = "/rewards", method = RequestMethod.GET)
     public ResponseEntity<List<Reward>> getRewards(
-            @RequestParam(name = "startDate", required = false) Long startDate,
-            @RequestParam(name = "endDate", required = false) Long endDate) {
+            @RequestParam(name = "startDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 
-        List<Reward> rewards = transactionService.getMonthlyRewards(startDate, endDate);
-        return new ResponseEntity<>(rewards, HttpStatus.OK);
+            @RequestParam(name = "endDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        Long startMillis = (startDate != null)
+                ? startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                : null;
+
+        Long endMillis = (endDate != null)
+                ? endDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                : null;
+
+        List<Reward> rewards = transactionService.getMonthlyRewards(startMillis, endMillis);
+        return ResponseEntity.ok(rewards);
     }
+
 
     @PostMapping(value = "/transaction", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> saveTransaction(@RequestBody Transaction transaction) {
