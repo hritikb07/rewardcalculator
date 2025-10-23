@@ -2,6 +2,7 @@ package com.infy.rewardcalculator.controller;
 
 import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Transaction;
+import com.infy.rewardcalculator.service.CustomerService;
 import com.infy.rewardcalculator.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +20,8 @@ public class RewardController {
 
     @Autowired
     private TransactionService transactionService;
+    @Autowired
+    private CustomerService customerService;
 
 //    @GetMapping("/rewards")
 //    public ResponseEntity<List<Reward>> rewardsWithEmptyDate() {
@@ -69,5 +72,24 @@ public class RewardController {
     @GetMapping(value = "/transactions", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<Transaction>> transactions() {
         return new ResponseEntity<>(transactionService.getAllTransactions(), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/rewards/customer/{customerId}", method = RequestMethod.GET)
+    public ResponseEntity<List<Reward>> getCustomerRewards(@PathVariable(name ="customerId") int customerId,
+            @RequestParam(name = "startDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+
+            @RequestParam(name = "endDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        Long startMillis = (startDate != null)
+                ? startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                : null;
+
+        Long endMillis = (endDate != null)
+                ? endDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                : null;
+
+        List<Reward> rewards = customerService.getMonthlyRewards(customerId,startMillis, endMillis);
+        return ResponseEntity.ok(rewards);
     }
 }

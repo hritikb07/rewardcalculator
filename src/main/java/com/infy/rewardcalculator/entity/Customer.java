@@ -3,6 +3,8 @@ package com.infy.rewardcalculator.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity(name = "CUSTOMER")
 @Data
 public class Customer {
@@ -14,5 +16,8 @@ public class Customer {
 
     @Column(name = "CUSTOMER_NAME")
     private String customerName;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Transaction> transactions;
 
 }

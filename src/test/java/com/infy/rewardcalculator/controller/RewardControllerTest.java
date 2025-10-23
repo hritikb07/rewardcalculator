@@ -5,6 +5,7 @@ import com.infy.rewardcalculator.dto.MonthlyReward;
 import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Customer;
 import com.infy.rewardcalculator.entity.Transaction;
+import com.infy.rewardcalculator.service.CustomerService;
 import com.infy.rewardcalculator.service.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -30,6 +31,9 @@ class RewardControllerTest {
 
     @MockBean
     private TransactionService transactionService;
+
+    @MockBean
+    private CustomerService customerService;
 
     @Autowired
     private ObjectMapper objectMapper;
