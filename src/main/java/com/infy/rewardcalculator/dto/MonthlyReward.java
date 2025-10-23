@@ -5,12 +5,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class MonthlyRewardDto {
+public class MonthlyReward {
 
     private String month;
     private int rewardAmount;
 
-    public MonthlyRewardDto(String key, Integer value) {
+    public MonthlyReward(String key, Integer value) {
         this.month = key;
         this.rewardAmount = value;
     }

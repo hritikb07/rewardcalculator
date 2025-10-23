@@ -1,7 +1,7 @@
 package com.infy.rewardcalculator.service;
 
-import com.infy.rewardcalculator.dto.MonthlyRewardDto;
-import com.infy.rewardcalculator.dto.RewardDto;
+import com.infy.rewardcalculator.dto.MonthlyReward;
+import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Customer;
 import com.infy.rewardcalculator.entity.Transaction;
 import com.infy.rewardcalculator.repository.TransactionRepository;
@@ -59,16 +59,16 @@ class TransactionServiceImplTest {
 
         when(transactionRepository.findAll()).thenReturn(transactions);
 
-        List<RewardDto> rewardData = transactionServiceImpl.getMonthlyRewards(null, null);
+        List<Reward> rewardData = transactionServiceImpl.getMonthlyRewards(null, null);
 
         // Assert only 1 customer
         Assertions.assertEquals(1, rewardData.size());
 
         // Get the RewardDto for "Hritik"
-        RewardDto hritikReward = rewardData.stream().filter(r -> "Hritik".equals(r.getCustomerName())).findFirst().orElseThrow(() -> new AssertionError("Customer Hritik not found"));
+        Reward hritikReward = rewardData.stream().filter(r -> "Hritik".equals(r.getCustomerName())).findFirst().orElseThrow(() -> new AssertionError("Customer Hritik not found"));
 
         // Assert that there is a reward for SEPTEMBER and its value is 340
-        int septemberReward = hritikReward.getMonthlyRewardDtos().stream().filter(m -> "SEPTEMBER".equals(m.getMonth())).findFirst().map(MonthlyRewardDto::getRewardAmount).orElseThrow(() -> new AssertionError("SEPTEMBER reward not found"));
+        int septemberReward = hritikReward.getMonthlyRewards().stream().filter(m -> "SEPTEMBER".equals(m.getMonth())).findFirst().map(MonthlyReward::getRewardAmount).orElseThrow(() -> new AssertionError("SEPTEMBER reward not found"));
 
         Assertions.assertEquals(340, septemberReward);
 
@@ -119,17 +119,17 @@ class TransactionServiceImplTest {
 
         when(transctionRepository.findAll()).thenReturn(transactions);
 
-        List<RewardDto> rewardData = transcationServiceImpl.getMonthlyRewards(null,null);
+        List<Reward> rewardData = transcationServiceImpl.getMonthlyRewards(null,null);
 
 
         // Assert only 1 customer
         Assertions.assertEquals(1, rewardData.size());
 
         // Get the RewardDto for "Hritik"
-        RewardDto hritikReward = rewardData.stream().filter(r -> "Hritik".equals(r.getCustomerName())).findFirst().orElseThrow(() -> new AssertionError("Customer Hritik not found"));
+        Reward hritikReward = rewardData.stream().filter(r -> "Hritik".equals(r.getCustomerName())).findFirst().orElseThrow(() -> new AssertionError("Customer Hritik not found"));
 
         // Assert that there is a reward for SEPTEMBER and its value is 0
-        int septemberReward = hritikReward.getMonthlyRewardDtos().stream().filter(m -> "SEPTEMBER".equals(m.getMonth())).findFirst().map(MonthlyRewardDto::getRewardAmount).orElseThrow(() -> new AssertionError("SEPTEMBER reward not found"));
+        int septemberReward = hritikReward.getMonthlyRewards().stream().filter(m -> "SEPTEMBER".equals(m.getMonth())).findFirst().map(MonthlyReward::getRewardAmount).orElseThrow(() -> new AssertionError("SEPTEMBER reward not found"));
 
         Assertions.assertEquals(0, septemberReward);
 

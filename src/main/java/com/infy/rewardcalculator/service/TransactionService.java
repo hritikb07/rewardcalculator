@@ -1,6 +1,6 @@
 package com.infy.rewardcalculator.service;
 
-import com.infy.rewardcalculator.dto.RewardDto;
+import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Transaction;
 
 import java.util.List;
@@ -11,5 +11,5 @@ public interface TransactionService {
 
     void saveTransaction(Transaction transaction);
 
-    List<RewardDto> getMonthlyRewards(Long startDateMillis, Long endDateMillis);
+    List<Reward> getMonthlyRewards(Long startDateMillis, Long endDateMillis);
 }

@@ -7,12 +7,12 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class RewardDto {
+public class Reward {
     private String customerName;
-    private List<MonthlyRewardDto> monthlyRewardDtos;
+    private List<MonthlyReward> monthlyRewards;
 
-    public RewardDto(String customerName, List<MonthlyRewardDto> monthlyRewardDtos) {
+    public Reward(String customerName, List<MonthlyReward> monthlyRewards) {
         this.customerName = customerName;
-        this.monthlyRewardDtos = monthlyRewardDtos;
+        this.monthlyRewards = monthlyRewards;
     }
 }

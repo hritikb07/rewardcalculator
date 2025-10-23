@@ -1,7 +1,7 @@
 package com.infy.rewardcalculator.service;
 
-import com.infy.rewardcalculator.dto.MonthlyRewardDto;
-import com.infy.rewardcalculator.dto.RewardDto;
+import com.infy.rewardcalculator.dto.MonthlyReward;
+import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Transaction;
 import com.infy.rewardcalculator.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,7 @@ public class TransactionServiceImpl implements TransactionService {
      * @return list of reward dto
      */
     @Override
-    public List<RewardDto> getMonthlyRewards(Long startDateMillis, Long endDateMillis) {
+    public List<Reward> getMonthlyRewards(Long startDateMillis, Long endDateMillis) {
         Iterable<Transaction> transactions = transactionRepository.findAll();
 
         // Convert Iterable to Stream
@@ -71,7 +71,7 @@ public class TransactionServiceImpl implements TransactionService {
         Map<String, Map<String, Integer>> rewardsMap = transactionStream.collect(Collectors.groupingBy(t -> t.getCustomer().getCustomerName(), Collectors.groupingBy(t -> getMonthFromMillis(t.getTransactionDate()), Collectors.summingInt(t -> calculatePoints(t.getTransactionAmount())))));
 
         // Mapping to List<RewardDto>
-        return rewardsMap.entrySet().stream().map(entry -> new RewardDto(entry.getKey(), entry.getValue().entrySet().stream().map(monthEntry -> new MonthlyRewardDto(monthEntry.getKey(), monthEntry.getValue())).collect(Collectors.toList()))).collect(Collectors.toList());
+        return rewardsMap.entrySet().stream().map(entry -> new Reward(entry.getKey(), entry.getValue().entrySet().stream().map(monthEntry -> new MonthlyReward(monthEntry.getKey(), monthEntry.getValue())).collect(Collectors.toList()))).collect(Collectors.toList());
     }
 
 

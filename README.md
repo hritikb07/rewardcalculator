@@ -13,7 +13,7 @@ This is reward calculator application which created monthly rewards for all tran
 [
   {
     "customerName": "Hritik",
-    "monthlyRewardDtos": [
+    "monthlyRewards": [
       {
         "month": "JULY",
         "rewardAmount": 580
@@ -22,7 +22,7 @@ This is reward calculator application which created monthly rewards for all tran
   },
   {
     "customerName": "Priyanka",
-    "monthlyRewardDtos": [
+    "monthlyRewards": [
       {
         "month": "JANUARY",
         "rewardAmount": 90
@@ -39,7 +39,7 @@ This is reward calculator application which created monthly rewards for all tran
   },
   {
     "customerName": "Manoj",
-    "monthlyRewardDtos": [
+    "monthlyRewards": [
       {
         "month": "JULY",
         "rewardAmount": 1090
@@ -61,7 +61,7 @@ This is reward calculator application which created monthly rewards for all tran
 [
     {
         "customerName": "Hritik",
-        "monthlyRewardDtos": [
+        "monthlyRewards": [
             {
                 "month": "JULY",
                 "rewardAmount": 580
@@ -70,7 +70,7 @@ This is reward calculator application which created monthly rewards for all tran
     },
     {
         "customerName": "Priyanka",
-        "monthlyRewardDtos": [
+        "monthlyRewards": [
             {
                 "month": "JULY",
                 "rewardAmount": 930
@@ -79,7 +79,7 @@ This is reward calculator application which created monthly rewards for all tran
     },
     {
         "customerName": "Manoj",
-        "monthlyRewardDtos": [
+        "monthlyRewards": [
             {
                 "month": "JULY",
                 "rewardAmount": 1090

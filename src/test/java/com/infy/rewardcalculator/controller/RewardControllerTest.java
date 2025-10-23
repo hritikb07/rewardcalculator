@@ -1,8 +1,8 @@
 package com.infy.rewardcalculator.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.infy.rewardcalculator.dto.MonthlyRewardDto;
-import com.infy.rewardcalculator.dto.RewardDto;
+import com.infy.rewardcalculator.dto.MonthlyReward;
+import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Customer;
 import com.infy.rewardcalculator.entity.Transaction;
 import com.infy.rewardcalculator.service.TransactionService;
@@ -35,16 +35,16 @@ class RewardControllerTest {
     private ObjectMapper objectMapper;
 
     // Sample DTOs
-    private RewardDto sampleRewardDto() {
-        MonthlyRewardDto monthly = new MonthlyRewardDto();
+    private Reward sampleRewardDto() {
+        MonthlyReward monthly = new MonthlyReward();
         monthly.setMonth("SEPTEMBER");
         monthly.setRewardAmount(150);
 
-        RewardDto rewardDto = new RewardDto();
-        rewardDto.setCustomerName("Hritik");
-        rewardDto.setMonthlyRewardDtos(Collections.singletonList(monthly));
+        Reward reward = new Reward();
+        reward.setCustomerName("Hritik");
+        reward.setMonthlyRewards(Collections.singletonList(monthly));
 
-        return rewardDto;
+        return reward;
     }
 
     private Transaction sampleTransaction() {
@@ -63,22 +63,22 @@ class RewardControllerTest {
 
     @Test
     void testRewardsWithEmptyDate() throws Exception {
-        List<RewardDto> mockResponse = Collections.singletonList(sampleRewardDto());
+        List<Reward> mockResponse = Collections.singletonList(sampleRewardDto());
         Mockito.when(transactionService.getMonthlyRewards(null, null)).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/rewards")).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewardDtos[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewardDtos[0].rewardAmount").value(150));
+        mockMvc.perform(get("/rewards")).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewards[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewards[0].rewardAmount").value(150));
     }
 
     @Test
     void testRewardsWithDates() throws Exception {
-        List<RewardDto> mockResponse = Collections.singletonList(sampleRewardDto());
+        List<Reward> mockResponse = Collections.singletonList(sampleRewardDto());
 
         long startDate = 1739577600000L; // 15 Feb 2025
         long endDate = 1757894400000L;   // 15 Sep 2025
 
         Mockito.when(transactionService.getMonthlyRewards(startDate, endDate)).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/rewards/{startDate}/{endDate}", startDate, endDate)).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewardDtos[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewardDtos[0].rewardAmount").value(150));
+        mockMvc.perform(get("/rewards/{startDate}/{endDate}", startDate, endDate)).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewards[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewards[0].rewardAmount").value(150));
     }
 
     @Test
