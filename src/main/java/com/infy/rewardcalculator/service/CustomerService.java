@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface CustomerService {
     Customer getCustomerById(int customerId);
-    List<Reward> getMonthlyRewards(int customerId ,Long startDateMillis, Long endDateMillis);
+
+    List<Reward> getMonthlyRewards(int customerId, Long startDateMillis, Long endDateMillis);
 }

@@ -1,4 +1,4 @@
-# rewardcalculator
+# Reward calculator
 This is reward calculator application which created monthly rewards for all transactions
 
 # REST APIs
@@ -51,11 +51,11 @@ This is reward calculator application which created monthly rewards for all tran
 
 ### 2.  Reward by start and end date
 
-####    End Point - `/rewards/{startDate}/{endDate}`
+####    End Point - `/rewards`
         Method -   GET
         This API returns the customer reward based on provided start and end date
 
-### Sample request - `/rewards/1739577600000/1757894400000`
+### Sample request - `/rewards?startDate=2025-02-15&endDate=2025-09-15`
 ### Sample response for start and end date(15 Feb 2025 to 15 Sept 2025) 
 ```json
 [
@@ -232,5 +232,25 @@ This is reward calculator application which created monthly rewards for all tran
         }
 }
 ```
-### Sample Response - Transaction saved successfully.
+### 5.Get rewards by customerId,startDate,endDate
+
+### method-Get
+### endPoint- `/rewards/customer/{customerId}`
+### returns rewards
+### 
+### Sample Response 
+```json
+[
+    {
+        "customerName": "Manoj",
+        "monthlyRewards": [
+            {
+                "month": "JULY",
+                "rewardAmount": 1090
+            }
+        ]
+    }
+]
+```
+
 

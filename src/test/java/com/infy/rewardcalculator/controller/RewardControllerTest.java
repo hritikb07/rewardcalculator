@@ -82,7 +82,7 @@ class RewardControllerTest {
 
         Mockito.when(transactionService.getMonthlyRewards(any(), any())).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/rewards?startDate="+startDate+"&endDate="+ endDate)).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewards[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewards[0].rewardAmount").value(150));
+        mockMvc.perform(get("/rewards?startDate=" + startDate + "&endDate=" + endDate)).andExpect(status().isOk()).andExpect(jsonPath("$[0].customerName").value("Hritik")).andExpect(jsonPath("$[0].monthlyRewards[0].month").value("SEPTEMBER")).andExpect(jsonPath("$[0].monthlyRewards[0].rewardAmount").value(150));
     }
 
     @Test

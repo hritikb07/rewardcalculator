@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -19,7 +18,7 @@ import static com.infy.rewardcalculator.util.RewardUtil.getMonthFromMillis;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
-    private  final CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -33,8 +32,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Reward> getMonthlyRewards(int customerId, Long startDateMillis, Long endDateMillis) {
-        Customer customer=(Customer)customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found with ID: " + customerId));;
-        List<Transaction> transactionList=customer.getTransactions();
+        Customer customer = (Customer) customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found with ID: " + customerId));
+        ;
+        List<Transaction> transactionList = customer.getTransactions();
         // Convert Iterable to Stream
         Stream<Transaction> transactionStream = StreamSupport.stream(transactionList.spliterator(), false).filter(t -> {
             // If dates are provided, apply filter; otherwise, always include the transaction
