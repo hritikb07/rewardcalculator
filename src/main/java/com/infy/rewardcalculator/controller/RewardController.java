@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -23,6 +24,20 @@ public class RewardController {
     @Autowired
     private CustomerService customerService;
 
+    private static void validateDateDifference(LocalDate startDate, LocalDate endDate) throws Exception {
+        // Validate dates if both are provided
+        if (startDate != null && endDate != null) {
+            if (endDate.isBefore(startDate)) {
+                throw new Exception("End date cannot be before start date.");
+            }
+
+            // Check if difference is more than 3 months
+            Period period = Period.between(startDate, endDate);
+            if (period.toTotalMonths() > 3 || (period.toTotalMonths() == 3 && endDate.getDayOfMonth() > startDate.getDayOfMonth())) {
+                throw new Exception("Date range should not exceed 3 months.");
+            }
+        }
+    }
 
     private ResponseEntity<List<Reward>> getListResponseEntity(Long startDate, Long endDate) {
         return new ResponseEntity<>(transactionService.getMonthlyRewards(startDate, endDate), HttpStatus.OK);
@@ -35,13 +50,16 @@ public class RewardController {
      * If dates are not provided, they will be passed as null.
      * <p>
      * Example URLs:
-     * GET http://localhost:8080/rewards
-     * Get http://localhost:8080/rewards?startDate=2025-02-15&endDate=2025-09-15
+     * GET <a href="http://localhost:8080/rewards">...</a>
+     * Get <a href="http://localhost:8080/rewards?startDate=2025-02-15&endDate=2025-09-15">...</a>
      */
     @RequestMapping(value = "/rewards", method = RequestMethod.GET)
     public ResponseEntity<List<Reward>> getRewards(@RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 
-                                                   @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                                   @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {
+
+
+        validateDateDifference(startDate, endDate);
 
         Long startMillis = (startDate != null) ? startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() : null;
 
@@ -50,7 +68,6 @@ public class RewardController {
         List<Reward> rewards = transactionService.getMonthlyRewards(startMillis, endMillis);
         return ResponseEntity.ok(rewards);
     }
-
 
     @PostMapping(value = "/transaction", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> saveTransaction(@RequestBody Transaction transaction) {
@@ -66,7 +83,9 @@ public class RewardController {
     @RequestMapping(value = "/rewards/customer/{customerId}", method = RequestMethod.GET)
     public ResponseEntity<List<Reward>> getCustomerRewards(@PathVariable(name = "customerId") int customerId, @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 
-                                                           @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                                           @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {
+
+        validateDateDifference(startDate, endDate);
 
         Long startMillis = (startDate != null) ? startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() : null;
 

@@ -78,7 +78,7 @@ class RewardControllerTest {
         List<Reward> mockResponse = Collections.singletonList(sampleRewardDto());
 
         String startDate = "2025-02-15"; // 15 Feb 2025
-        String endDate = "2025-09-15";   // 15 Sep 2025
+        String endDate = "2025-04-15";   // 15 Apr 2025
 
         Mockito.when(transactionService.getMonthlyRewards(any(), any())).thenReturn(mockResponse);
 
