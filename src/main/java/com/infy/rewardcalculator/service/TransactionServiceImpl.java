@@ -1,18 +1,13 @@
 package com.infy.rewardcalculator.service;
 
-import com.infy.rewardcalculator.dto.MonthlyReward;
 import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Transaction;
 import com.infy.rewardcalculator.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
-import static com.infy.rewardcalculator.util.RewardUtil.*;
+import static com.infy.rewardcalculator.util.RewardUtil.getRewards;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
