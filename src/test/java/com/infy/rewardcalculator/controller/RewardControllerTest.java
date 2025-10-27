@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -138,5 +139,43 @@ class RewardControllerTest {
         when(transactionService.getAllTransactions()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/transactions")).andExpect(status().isOk()).andExpect(content().string("[]"));
+    }
+
+    @Test
+    void testGetCustomerRewards_WithCustomerId_ReturnsRewards() throws Exception {
+        Reward reward = new Reward();
+        reward.setCustomerName("Hritik");
+        List<MonthlyReward> monthlyRewards = new ArrayList<>();
+        MonthlyReward monthlyReward = new MonthlyReward();
+        monthlyReward.setMonth("January");
+        monthlyReward.setRewardAmount(100);
+        monthlyRewards.add(monthlyReward);
+        reward.setMonthlyRewards(monthlyRewards);
+        when(customerService.getMonthlyRewards(101, null, null, null))
+                .thenReturn(List.of(reward));
+
+        mockMvc.perform(get("/rewards/customer")
+                        .param("customerId", "101"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].customerName").value("Hritik"))
+                .andExpect(jsonPath("$[0].monthlyRewards[0].rewardAmount").value(100));
+    }
+
+    @Test
+    void testGetCustomerRewards_MissingParams_ShouldThrowInfyException() throws Exception {
+        mockMvc.perform(get("/rewards/customer"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(result ->
+                        result.getResolvedException().getMessage()
+                                .contains("Either customer name or customer Id must be required"));
+    }
+
+    @Test
+    void testGetCustomerRewards_InvalidDateRange_ShouldThrowException() throws Exception {
+        mockMvc.perform(get("/rewards/customer")
+                        .param("customerId", "1")
+                        .param("startDate", "2025-10-10")
+                        .param("endDate", "2025-01-01"))
+                .andExpect(status().isInternalServerError());
     }
 }
