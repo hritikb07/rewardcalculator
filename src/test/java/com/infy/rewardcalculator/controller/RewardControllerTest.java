@@ -55,7 +55,7 @@ class RewardControllerTest {
         Transaction txn = new Transaction();
         txn.setTransactionId(1);
         txn.setTransactionAmount(200.0);
-        txn.setTransactionDate(1757894400000L); // 15 Sep 2025
+        txn.setTransactionDate("2025-27-10");
 
         Customer customer = new Customer();
         customer.setCustomerId(1000);

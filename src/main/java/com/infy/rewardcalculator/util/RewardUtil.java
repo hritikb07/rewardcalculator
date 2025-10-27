@@ -51,14 +51,14 @@ public class RewardUtil {
         Stream<Transaction> transactionStream = StreamSupport.stream(transactions.spliterator(), false).filter(t -> {
             // If dates are provided, apply filter; otherwise, always include the transaction
             if (startDateMillis != null && endDateMillis != null) {
-                long txnDate = t.getTransactionDate(); // Assuming transactionDate is in millis
+                long txnDate = (long) t.getTransactionDate(); // Assuming transactionDate is in millis
                 return txnDate >= startDateMillis && txnDate <= endDateMillis;
             }
             return true;
         });
 
         // Grouping transactions by customer name and month, summing points
-        Map<String, Map<String, Integer>> rewardsMap = transactionStream.collect(Collectors.groupingBy(t -> t.getCustomer().getCustomerName(), Collectors.groupingBy(t -> getMonthFromMillis(t.getTransactionDate()), Collectors.summingInt(t -> calculatePoints(t.getTransactionAmount())))));
+        Map<String, Map<String, Integer>> rewardsMap = transactionStream.collect(Collectors.groupingBy(t -> t.getCustomer().getCustomerName(), Collectors.groupingBy(t -> getMonthFromMillis((Long) t.getTransactionDate()), Collectors.summingInt(t -> calculatePoints(t.getTransactionAmount())))));
 
         // Mapping to List<RewardDto>
         return rewardsMap.entrySet().stream().map(entry -> new Reward(entry.getKey(), entry.getValue().entrySet().stream().map(monthEntry -> new MonthlyReward(monthEntry.getKey(), monthEntry.getValue())).collect(Collectors.toList()))).collect(Collectors.toList());

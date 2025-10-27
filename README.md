@@ -109,7 +109,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 1,
     "transactionAmount": 200.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1000,
       "customerName": "Hritik"
@@ -118,7 +118,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 2,
     "transactionAmount": 240.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1000,
       "customerName": "Hritik"
@@ -127,7 +127,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 3,
     "transactionAmount": 45.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1000,
       "customerName": "Hritik"
@@ -136,7 +136,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 4,
     "transactionAmount": 40.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1000,
       "customerName": "Hritik"
@@ -145,7 +145,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 5,
     "transactionAmount": 450.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1001,
       "customerName": "Manoj"
@@ -154,7 +154,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 6,
     "transactionAmount": 120.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1001,
       "customerName": "Manoj"
@@ -163,7 +163,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 7,
     "transactionAmount": 200.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1001,
       "customerName": "Manoj"
@@ -172,7 +172,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 8,
     "transactionAmount": 250.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1002,
       "customerName": "Priyanka"
@@ -181,7 +181,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 9,
     "transactionAmount": 90.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1002,
       "customerName": "Priyanka"
@@ -190,7 +190,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 10,
     "transactionAmount": 240.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1002,
       "customerName": "Priyanka"
@@ -199,7 +199,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 11,
     "transactionAmount": 180.0,
-    "transactionDate": 1752537600000,
+    "transactionDate": "2025-07-15",
     "customer": {
       "customerId": 1002,
       "customerName": "Priyanka"
@@ -208,7 +208,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 12,
     "transactionAmount": 120.0,
-    "transactionDate": 1736899200000,
+    "transactionDate": "2025-01-15",
     "customer": {
       "customerId": 1002,
       "customerName": "Priyanka"
@@ -217,7 +217,7 @@ This is reward calculator application which created monthly rewards for all tran
   {
     "transactionId": 13,
     "transactionAmount": 100.0,
-    "transactionDate": 1765756800000,
+    "transactionDate": "2025-12-15",
     "customer": {
       "customerId": 1002,
       "customerName": "Priyanka"
@@ -239,7 +239,7 @@ This is reward calculator application which created monthly rewards for all tran
 ```json
 {
   "transactionAmount": 100,
-  "transactionDate": 1765756800000,
+  "transactionDate": "2025-27-10",
   "customer": {
     "customerId": 1002,
     "customerName": "Priyanka"
@@ -255,7 +255,7 @@ This is reward calculator application which created monthly rewards for all tran
 
 ### returns rewards
 
-###  
+###    
 
 ### Sample Response
 

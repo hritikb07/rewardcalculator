@@ -15,7 +15,7 @@ public class Transaction {
     private double transactionAmount;
 
     @Column(name = "TRANSACTION_DATE")
-    private long transactionDate;
+    private Object transactionDate;
 
     @ManyToOne
     @JoinColumn(name = "CUSTOMER_ID", nullable = false)

@@ -5,6 +5,9 @@ import com.infy.rewardcalculator.entity.Transaction;
 import com.infy.rewardcalculator.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.infy.rewardcalculator.util.RewardUtil.getRewards;
@@ -24,7 +27,23 @@ public class TransactionServiceImpl implements TransactionService {
      */
     @Override
     public List<Transaction> getAllTransactions() {
-        return (List<Transaction>) transactionRepository.findAll();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        return ((List<Transaction>) transactionRepository.findAll())
+                .stream()
+                .peek(transaction -> {
+                    Object dateObj = transaction.getTransactionDate();
+
+                    if (dateObj instanceof Long millis) {
+                        String formattedDate = Instant.ofEpochMilli(millis)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+                                .format(formatter);
+                        transaction.setTransactionDate(formattedDate);
+                    }
+                })
+                .toList();
+
     }
 
     /**

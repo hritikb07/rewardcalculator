@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -71,6 +72,11 @@ public class RewardController {
 
     @PostMapping(value = "/transaction", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> saveTransaction(@RequestBody Transaction transaction) {
+        if (transaction != null && transaction.getTransactionDate() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
+            LocalDate localDate = LocalDate.parse(transaction.getTransactionDate().toString(), formatter);
+            transaction.setTransactionDate(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        }
         transactionService.saveTransaction(transaction);
         return new ResponseEntity<>("Transaction saved successfully.", HttpStatus.OK);
     }
