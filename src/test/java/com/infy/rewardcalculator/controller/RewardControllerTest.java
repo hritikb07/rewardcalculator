@@ -113,7 +113,7 @@ class RewardControllerTest {
     void testSaveTransactionWithMissingFields() throws Exception {
         Transaction invalidTransaction = new Transaction(); // missing fields
 
-        mockMvc.perform(post("/transaction").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(invalidTransaction))).andExpect(status().isOk()); // Assuming validation is applied
+        mockMvc.perform(post("/transaction").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(invalidTransaction))).andExpect(status().isInternalServerError()); // Assuming validation is applied
 
         verify(transactionService, atMostOnce()).saveTransaction(any());
     }

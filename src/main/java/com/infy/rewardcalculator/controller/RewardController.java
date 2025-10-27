@@ -2,6 +2,7 @@ package com.infy.rewardcalculator.controller;
 
 import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Transaction;
+import com.infy.rewardcalculator.exception.InfyException;
 import com.infy.rewardcalculator.service.CustomerService;
 import com.infy.rewardcalculator.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -25,17 +25,17 @@ public class RewardController {
     @Autowired
     private CustomerService customerService;
 
-    private static void validateDateDifference(LocalDate startDate, LocalDate endDate) throws Exception {
+    private static void validateDateDifference(LocalDate startDate, LocalDate endDate) throws InfyException {
         // Validate dates if both are provided
         if (startDate != null && endDate != null) {
             if (endDate.isBefore(startDate)) {
-                throw new Exception("End date cannot be before start date.");
+                throw new InfyException("End date cannot be before start date.");
             }
 
             // Check if difference is more than 3 months
             Period period = Period.between(startDate, endDate);
             if (period.toTotalMonths() > 3 || (period.toTotalMonths() == 3 && endDate.getDayOfMonth() > startDate.getDayOfMonth())) {
-                throw new Exception("Date range should not exceed 3 months.");
+                throw new InfyException("Date range should not exceed 3 months.");
             }
         }
     }
@@ -71,12 +71,20 @@ public class RewardController {
     }
 
     @PostMapping(value = "/transaction", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> saveTransaction(@RequestBody Transaction transaction) {
-        if (transaction != null && transaction.getTransactionDate() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
-            LocalDate localDate = LocalDate.parse(transaction.getTransactionDate().toString(), formatter);
-            transaction.setTransactionDate(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
+    public ResponseEntity<String> saveTransaction(@RequestBody Transaction transaction) throws InfyException {
+        if (transaction == null) {
+            throw new InfyException("transaction object cannot be empty.");
         }
+
+        if (transaction.getCustomer() == null) {
+            throw new InfyException("customer must be present in transaction object.");
+        }
+
+        if (transaction.getCustomer().getCustomerId() == null) {
+            throw new InfyException("customer Id cannot be empty while saving the transaction.");
+        }
+
+        transaction.setTransactionDate(System.currentTimeMillis());
         transactionService.saveTransaction(transaction);
         return new ResponseEntity<>("Transaction saved successfully.", HttpStatus.OK);
     }
@@ -97,6 +105,9 @@ public class RewardController {
 
         validateDateDifference(startDate, endDate);
 
+        if (customerId == null && (customerName == null || customerName.isBlank())) {
+            throw new InfyException("Either customer name or customer Id must be required.");
+        }
         Long startMillis = (startDate != null)
                 ? startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
                 : null;

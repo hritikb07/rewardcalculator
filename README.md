@@ -239,7 +239,6 @@ This is reward calculator application which created monthly rewards for all tran
 ```json
 {
   "transactionAmount": 100,
-  "transactionDate": "2025-27-10",
   "customer": {
     "customerId": 1002,
     "customerName": "Priyanka"
@@ -255,7 +254,7 @@ This is reward calculator application which created monthly rewards for all tran
 
 ### returns rewards
 
-###    
+###     
 
 ### Sample Response
 
