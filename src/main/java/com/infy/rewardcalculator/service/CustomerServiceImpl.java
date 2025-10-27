@@ -20,14 +20,25 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public Customer getCustomerById(int customerId) {
+    public Customer getCustomerById(Integer customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found with ID: " + customerId));
     }
 
     @Override
-    public List<Reward> getMonthlyRewards(int customerId, Long startDateMillis, Long endDateMillis) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found with ID: " + customerId));
-        ;
+    public Customer getCustomerByName(String customerName) throws Exception {
+        return customerRepository.findByCustomerName(customerName).orElseThrow(() -> new Exception("Customer not found with name: " + customerName));
+    }
+
+    @Override
+    public List<Reward> getMonthlyRewards(Integer customerId, String customerName, Long startDateMillis, Long endDateMillis) {
+        System.out.println(customerId);
+        System.out.println(customerName);
+        Customer customer;
+        if (customerName != null && !customerName.isBlank()) {
+            customer = customerRepository.findByCustomerName(customerName).orElseThrow(() -> new RuntimeException("Customer not found with name: " + customerName));
+        } else {
+            customer = customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found with ID: " + customerId));
+        }
         List<Transaction> transactionList = customer.getTransactions();
         return getRewards(startDateMillis, endDateMillis, transactionList);
     }

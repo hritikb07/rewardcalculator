@@ -6,7 +6,9 @@ import com.infy.rewardcalculator.entity.Customer;
 import java.util.List;
 
 public interface CustomerService {
-    Customer getCustomerById(int customerId);
+    Customer getCustomerById(Integer customerId);
 
-    List<Reward> getMonthlyRewards(int customerId, Long startDateMillis, Long endDateMillis);
+    Customer getCustomerByName(String customerName) throws Exception;
+
+    List<Reward> getMonthlyRewards(Integer customerId, String customerName, Long startDateMillis, Long endDateMillis);
 }

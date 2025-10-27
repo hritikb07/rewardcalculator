@@ -80,18 +80,27 @@ public class RewardController {
         return new ResponseEntity<>(transactionService.getAllTransactions(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/rewards/customer/{customerId}", method = RequestMethod.GET)
-    public ResponseEntity<List<Reward>> getCustomerRewards(@PathVariable(name = "customerId") int customerId, @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-
-                                                           @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {
+    @RequestMapping(value = "/rewards/customer", method = RequestMethod.GET)
+    public ResponseEntity<List<Reward>> getCustomerRewards(
+            @RequestParam(name = "customerId", required = false) Integer customerId,
+            @RequestParam(name = "customerName", required = false) String customerName,
+            @RequestParam(name = "startDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(name = "endDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {
 
         validateDateDifference(startDate, endDate);
 
-        Long startMillis = (startDate != null) ? startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() : null;
+        Long startMillis = (startDate != null)
+                ? startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                : null;
 
-        Long endMillis = (endDate != null) ? endDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() : null;
+        Long endMillis = (endDate != null)
+                ? endDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                : null;
 
-        List<Reward> rewards = customerService.getMonthlyRewards(customerId, startMillis, endMillis);
+        // Call service method with all parameters
+        List<Reward> rewards = customerService.getMonthlyRewards(customerId, customerName, startMillis, endMillis);
         return ResponseEntity.ok(rewards);
     }
 }
