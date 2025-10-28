@@ -254,7 +254,7 @@ This is reward calculator application which created monthly rewards for all tran
 
 ### returns rewards
 
-###             
+###              
 
 ### Sample Response
 
@@ -273,8 +273,6 @@ This is reward calculator application which created monthly rewards for all tran
 ```
 
 # Test status
-
-![Alt text](./resources/test-result.png)
 
 ```cmd
 
@@ -375,8 +373,6 @@ D:\Work\JavaProjects\github\rewardcalculator>
 ```
 
 # Application run status
-
-![Alt text](./resources/application-run-status.png)
 
 ```cmd
 D:\Work\JavaProjects\github\rewardcalculator>mvn spring-boot:run
