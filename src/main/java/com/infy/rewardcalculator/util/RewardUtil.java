@@ -3,6 +3,7 @@ package com.infy.rewardcalculator.util;
 import com.infy.rewardcalculator.dto.MonthlyReward;
 import com.infy.rewardcalculator.dto.Reward;
 import com.infy.rewardcalculator.entity.Transaction;
+import com.infy.rewardcalculator.exception.InfyException;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -22,7 +23,11 @@ public class RewardUtil {
      * @param millis
      * @return month in word
      */
-    public static String getMonthFromMillis(long millis) {
+    public static String getMonthFromMillis(long millis) throws InfyException {
+
+        if (millis < 0) {
+            throw new InfyException("Date should not be in negative.");
+        }
         LocalDateTime localDateTime = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDateTime();
         Month month = localDateTime.getMonth();
         return month.toString();
@@ -58,7 +63,13 @@ public class RewardUtil {
         });
 
         // Grouping transactions by customer name and month, summing points
-        Map<String, Map<String, Integer>> rewardsMap = transactionStream.collect(Collectors.groupingBy(t -> t.getCustomer().getCustomerName(), Collectors.groupingBy(t -> getMonthFromMillis((Long) t.getTransactionDate()), Collectors.summingInt(t -> calculatePoints(t.getTransactionAmount())))));
+        Map<String, Map<String, Integer>> rewardsMap = transactionStream.collect(Collectors.groupingBy(t -> t.getCustomer().getCustomerName(), Collectors.groupingBy(t -> {
+            try {
+                return getMonthFromMillis((Long) t.getTransactionDate());
+            } catch (InfyException e) {
+                throw new RuntimeException(e);
+            }
+        }, Collectors.summingInt(t -> calculatePoints(t.getTransactionAmount())))));
 
         // Mapping to List<RewardDto>
         return rewardsMap.entrySet().stream().map(entry -> new Reward(entry.getKey(), entry.getValue().entrySet().stream().map(monthEntry -> new MonthlyReward(monthEntry.getKey(), monthEntry.getValue())).collect(Collectors.toList()))).collect(Collectors.toList());
